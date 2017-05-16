@@ -1,0 +1,25 @@
+<launch>
+
+<!-- Usage: roslaunch didi_challenge_ros display_rosbag_rviz.launch rosbag_file:=/path/approach_1.bag  -->
+
+<arg name="rosbag_file" default="my_file_1" />
+
+<node pkg="rosbag" type="play" name="player" output="screen" args="-l $(arg rosbag_file) "/>
+
+<include file="$(find launchPKG)/launch/display_rviz.launch"/>
+
+<!-- start nodelet manager and driver nodelets -->
+<include file="$(find velodyne_driver)/launch/nodelet_manager.launch" />
+
+<!-- start cloud nodelet -->
+<include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+	<arg name="calibration"
+	value="$(find velodyne_pointcloud)/params/32db.yaml"/>
+</include>
+
+<!-- start heightmap nodelet -->
+<include file="$(find velodyne_height_map)/launch/heightmap_nodelet.launch"/>
+
+
+
+</launch>
